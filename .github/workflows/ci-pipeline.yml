@@ -17,10 +17,9 @@ jobs:
       # 2. TEST STAGE: Lint the HTML file
       - name: Lint HTML
         run: |
-          echo "Linting HTML file..."
-          # Use a different public linter image (cyclenerd/alpine-html)
-          # Mount the current directory and check index.html
-          docker run --rm -v $(pwd):/app cyclenerd/alpine-html index.html
+          echo "Installing linter..."
+              # Use the official alpine image, install the linter (tidyhtml), and run it
+              docker run --rm -v $(pwd):/data alpine:latest sh -c "apk add --no-cache tidyhtml && tidy -q -e /data/index.html"
 
       # 3. BUILD STAGE (Part 1): Login to Docker Hub
       - name: Login to Docker Hub
