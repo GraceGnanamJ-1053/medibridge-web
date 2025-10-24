@@ -18,9 +18,9 @@ jobs:
       - name: Lint HTML
         run: |
           echo "Linting HTML file..."
-          # Use a pre-built linter image to check HTML syntax
-          # The build will fail if your HTML has errors
-          docker run --rm -v $(pwd):/data dcycle/html-lint index.html
+          # Use a different public linter image (cyclenerd/alpine-html)
+          # Mount the current directory and check index.html
+          docker run --rm -v $(pwd):/app cyclenerd/alpine-html index.html
 
       # 3. BUILD STAGE (Part 1): Login to Docker Hub
       - name: Login to Docker Hub
