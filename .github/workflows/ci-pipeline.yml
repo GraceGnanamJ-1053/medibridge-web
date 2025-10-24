@@ -1,0 +1,43 @@
+name: CI - Build and Push Docker Image
+
+# Run this workflow every time a push is made to the "main" branch
+on:
+  push:
+    branches: [ "main" ] # [cite: 504, 505]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest # [cite: 511]
+    steps:
+
+      # 1. CHECKOUT STAGE: Get your code
+      - name: Checkout
+        uses: actions/checkout@v4 # [cite: 513, 514]
+
+      # 2. TEST STAGE: Lint the HTML file
+      - name: Lint HTML
+        run: |
+          echo "Linting HTML file..."
+          # Use a pre-built linter image to check HTML syntax
+          # The build will fail if your HTML has errors
+          docker run --rm -v $(pwd):/data dcycle/html-lint index.html
+
+      # 3. BUILD STAGE (Part 1): Login to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }} # [cite: 539, 540]
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 4. BUILD STAGE (Part 2): Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 # [cite: 536]
+
+      # 5. DEPLOY STAGE (to Registry): Build and push the image
+      - name: Build and push to Docker Hub
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true # [cite: 545]
+          # This tags the image as "latest"
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/medibridge-web:latest
