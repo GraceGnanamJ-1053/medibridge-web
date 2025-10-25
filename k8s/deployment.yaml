@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: medibridge-deployment
+  labels:
+    app: medibridge-web
+spec:
+  replicas: 2  # This tells Kubernetes to run 2 copies (pods) for orchestration
+  selector:
+    matchLabels:
+      app: medibridge-web # This links the Deployment to the pods
+  template:
+    metadata:
+      labels:
+        app: medibridge-web # This label is applied to the pods
+    spec:
+      containers:
+      - name: medibridge-web-container
+        image: gracegnanam/medibridge-web:latest
+        ports:
+        - containerPort: 80 # The port Nginx runs on inside the container

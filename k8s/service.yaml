@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: medibridge-service
+spec:
+  type: NodePort # This type is easy to access using Minikube [cite: 364]
+  selector:
+    app: medibridge-web # This MUST match the 'app' label in your deployment [cite: 366]
+  ports:
+    - protocol: TCP
+      port: 80         # Port inside the cluster
+      targetPort: 80   # Port on the container (where Nginx is running)
