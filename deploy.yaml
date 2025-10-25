@@ -1,0 +1,19 @@
+---
+- name: Deploy MediBridge Website to Kubernetes
+  hosts: localhost  # Run this on our own machine [cite: 251]
+  connection: local # Use the local connection, not SSH [cite: 252]
+  gather_facts: no  # We don't need to gather system facts [cite: 253]
+
+  tasks:
+    - name: 1. Apply the Kubernetes Deployment
+      # This uses the official k8s module we installed [cite: 255]
+      kubernetes.core.k8s:
+        state: present # This means "create or update"
+        src: k8s/deployment.yaml # Path to our deployment file
+        namespace: default
+
+    - name: 2. Apply the Kubernetes Service
+      kubernetes.core.k8s:
+        state: present
+        src: k8s/service.yaml # Path to our service file
+        namespace: default
